@@ -36,8 +36,7 @@ const task = new Task("check and remove proxy", () => {
    */
   for (let [key, value] of Object.entries(proxyTargetMap)) {
     if (now - value!.timestamp > threshold) {
-      delete proxyTargetMap[key]
-      delete proxyMiddlewareMap[key]
+      removeProxyTarget(key)
     }
   }
 })
@@ -47,6 +46,12 @@ const task = new Task("check and remove proxy", () => {
  * 这样任务就会定期检查并移除过期的代理。
  */
 schedule.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 1 }, task))
+
+// 删除对应key的代理
+export function removeProxyTarget(key: string) {
+  delete proxyTargetMap[key]
+  delete proxyMiddlewareMap[key]
+}
 
 /**
  * 设置特定键对应的代理目标URL，并创建相应的代理中间件。

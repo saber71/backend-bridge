@@ -1,5 +1,5 @@
 import Router from "koa-router"
-import { setProxyTarget } from "./proxy.ts"
+import { removeProxyTarget, setProxyTarget } from "./proxy.ts"
 
 export const router = new Router()
 
@@ -13,4 +13,13 @@ router.post("/proxy", (context, next) => {
   }
   context.response.body = "ok"
   next()
+})
+
+// /cancel-proxy?key=test
+// 删除代理
+router.post("/cancel-proxy", (context, next) => {
+  const key = context.query.key as string
+  if (key) {
+    removeProxyTarget(key)
+  }
 })

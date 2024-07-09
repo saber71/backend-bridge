@@ -16,9 +16,7 @@ app.use((context, next) => {
 app.listen(10000)
 
 //@ts-ignore
-await fetch("http://localhost:10001/proxy?key=test&target=http://localhost:10000", {
-  method: "post"
-})
+await fetch("http://localhost:10001/proxy?key=test&target=http://localhost:10000", { method: "post" })
 
 describe.sequential("bridge", () => {
   test("should proxy correctly", async () => {
@@ -29,5 +27,9 @@ describe.sequential("bridge", () => {
   })
   test("should cannot proxy", async () => {
     await httpTest({ url: "/test1/hello" }).expectStatus(404).done()
+  })
+  test("remove proxy", async () => {
+    await fetch("http://localhost:10001/cancel-proxy?key=test", { method: "post" })
+    await httpTest({ url: "/test/hello" }).expectStatus(404).done()
   })
 })
