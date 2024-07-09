@@ -2,10 +2,8 @@ import { httpTest, setDefaultAxiosConfig } from "@heraclius/http-test"
 //@ts-ignore
 import Koa from "koa"
 import { describe, test } from "vitest"
-import { setProxyTarget } from "../dist"
 import "../www.js"
 
-setProxyTarget("test", "http://localhost:10000")
 setDefaultAxiosConfig({ baseURL: "http://localhost:10001" })
 
 const app = new Koa()
@@ -16,6 +14,11 @@ app.use((context, next) => {
   next()
 })
 app.listen(10000)
+
+//@ts-ignore
+await fetch("http://localhost:10001/proxy?key=test&target=http://localhost:10000", {
+  method: "post"
+})
 
 describe.sequential("bridge", () => {
   test("should proxy correctly", async () => {
