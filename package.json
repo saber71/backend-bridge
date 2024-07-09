@@ -1,0 +1,40 @@
+{
+  "name": "@heraclius/backend-bridge",
+  "version": "0.1.0",
+  "description": "注册并代理转发后端服务",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@heraclius/external-deps-plugin": "^0.1.1",
+    "@heraclius/http-test": "^0.2.0",
+    "@types/koa": "^2.15.0",
+    "@types/node": "^20.14.10",
+    "@types/uuid": "^10.0.0",
+    "http-proxy-middleware": "^3.0.0",
+    "koa": "^2.15.3",
+    "koa-connect": "^2.1.0",
+    "koa-router": "^12.0.1",
+    "unplugin-swc": "^1.5.1",
+    "vite": "^5.3.3",
+    "vite-plugin-dts": "^3.9.1",
+    "vitest": "^1.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "www"
+  ],
+  "peerDependencies": {
+    "http-proxy-middleware": "^3.0.0",
+    "koa": "^2.15.3",
+    "koa-connect": "^2.1.0",
+    "koa-router": "^12.0.1"
+  }
+}
