@@ -59,7 +59,7 @@ router.post("/set-config", (context, next) => {
   // 从查询参数中获取配置项的键
   const key = context.query.key as string
   // 优先使用查询参数中的值，如果不存在，则使用请求体中的值
-  const value = (context.query.value as string) || context.body
+  const value = (context.query.value as string) || context.request.body
   // 如果键和值都存在，则更新配置对象
   if (key && value) {
     config[key] = value
@@ -95,15 +95,22 @@ router.post("/delete-config", (context, next) => {
 /**
  * 获取配置信息的路由处理函数。
  *
- * 该路由处理函数用于处理GET请求，请求的路径为/get-config?key=xxx。它的主要功能是根据请求中的查询参数key，
+ * 该路由处理函数用于处理Post请求，请求的路径为/get-config?key=xxx或是在请求体中携带key数组，查询参数中的key优先。它的主要功能是根据请求中的查询参数key，
  * 返回对应配置对象的值。如果key不存在于配置对象中，则返回空字符串。
  */
-router.get("/get-config", (context, next) => {
+router.post("/get-config", (context, next) => {
   // 从请求的查询参数中获取key值，并将其类型断言为字符串。
   const key = context.query.key as string
+  const keys = context.request.body as string[] | undefined
 
-  // 根据获取的key值从配置对象中获取对应的值。如果key不存在，则使用空字符串作为默认值。
-  context.response.body = config[key] ?? ""
+  if (key) {
+    // 根据获取的key值从配置对象中获取对应的值。如果key不存在，则使用空字符串作为默认值。
+    context.response.body = config[key] ?? ""
+  } else if (keys) {
+    context.response.body = keys.map((key) => config[key] ?? "")
+  } else {
+    context.response.body = ""
+  }
 
   // 调用next函数，继续处理请求的中间件链。
   next()

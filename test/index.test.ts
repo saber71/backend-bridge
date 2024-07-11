@@ -37,13 +37,16 @@ describe.sequential("bridge", () => {
     await httpTest({ url: "/test/hello" }).expectStatus(404).done()
   })
   test("should exist config value", async () => {
-    await httpTest({ url: "/get-config?key=test1" }).expectBody(1).done()
-    await httpTest({ url: "/get-config?key=test2" }).expectBody(2).done()
+    await httpTest({ url: "/get-config?key=test1", method: "post" }).expectBody(1).done()
+    await httpTest({ url: "/get-config?key=test2", method: "post" }).expectBody(2).done()
+    await httpTest({ url: "/get-config", method: "post", data: ["test1", "test2"] })
+      .expectBody(["1", "2"])
+      .done()
   })
   test("delete config and check", async () => {
     //@ts-ignore
     await fetch("http://localhost:10001/delete-config?key=test1", { method: "post" })
-    await httpTest({ url: "/get-config?key=test1" }).expectBody("").done()
-    await httpTest({ url: "/get-config?key=test2" }).expectBody(2).done()
+    await httpTest({ url: "/get-config?key=test1", method: "post" }).expectBody("").done()
+    await httpTest({ url: "/get-config?key=test2", method: "post" }).expectBody(2).done()
   })
 })
