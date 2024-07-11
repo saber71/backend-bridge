@@ -9,49 +9,49 @@ importers:
   .:
     devDependencies:
       '@heraclius/external-deps-plugin':
-        specifier: ^0.1.1
+        specifier: latest
         version: 0.1.1(vite@5.3.3(@types/node@20.14.10))
       '@heraclius/http-test':
-        specifier: ^0.2.0
+        specifier: latest
         version: 0.2.0(axios-cookiejar-support@5.0.2(axios@1.7.2)(tough-cookie@4.1.4))(axios@1.7.2)(tough-cookie@4.1.4)(vitest@2.0.2(@types/node@20.14.10))
       '@types/koa':
-        specifier: ^2.15.0
+        specifier: latest
         version: 2.15.0
       '@types/koa-router':
-        specifier: ^7.4.8
+        specifier: latest
         version: 7.4.8
       '@types/node':
-        specifier: ^20.14.10
+        specifier: latest
         version: 20.14.10
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
       http-proxy-middleware:
-        specifier: ^3.0.0
+        specifier: latest
         version: 3.0.0
       koa:
-        specifier: ^2.15.3
+        specifier: latest
         version: 2.15.3
       koa-connect:
-        specifier: ^2.1.0
+        specifier: latest
         version: 2.1.0
       koa-router:
         specifier: ^12.0.1
         version: 12.0.1
       toad-scheduler:
-        specifier: ^3.0.1
+        specifier: latest
         version: 3.0.1
       unplugin-swc:
-        specifier: ^1.5.1
+        specifier: latest
         version: 1.5.1(@swc/core@1.6.13)(rollup@4.18.1)
       vite:
-        specifier: ^5.3.3
+        specifier: latest
         version: 5.3.3(@types/node@20.14.10)
       vite-plugin-dts:
-        specifier: ^3.9.1
+        specifier: latest
         version: 3.9.1(@types/node@20.14.10)(rollup@4.18.1)(typescript@5.4.2)(vite@5.3.3(@types/node@20.14.10))
       vitest:
-        specifier: ^2.0.2
+        specifier: latest
         version: 2.0.2(@types/node@20.14.10)
 
 packages:
