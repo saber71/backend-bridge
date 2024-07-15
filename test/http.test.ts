@@ -3,7 +3,7 @@ import { httpTest, setDefaultAxiosConfig } from "@heraclius/http-test"
 import Koa from "koa"
 import { describe, test } from "vitest"
 import "../src"
-import { cancelBridge, connectBridge, setConfig } from "../lib"
+import { BridgeAPI } from "../lib"
 
 setDefaultAxiosConfig({ baseURL: "http://localhost:10001" })
 
@@ -17,11 +17,11 @@ app.use((context, next) => {
 app.listen(10000)
 
 //@ts-ignore
-await connectBridge("test", "http://localhost:10000")
+await BridgeAPI.connectBridge("test", "http://localhost:10000")
 //@ts-ignore
-await setConfig("test1", "1")
+await BridgeAPI.setConfig("test1", "1")
 //@ts-ignore
-await setConfig("test2", { name: "test" })
+await BridgeAPI.setConfig("test2", { name: "test" })
 
 describe.sequential("bridge", () => {
   test("should provide key and target when proxy", async () => {
@@ -40,7 +40,7 @@ describe.sequential("bridge", () => {
   })
   test("remove proxy", async () => {
     await httpTest({ url: "/cancel-proxy", method: "post" }).expectStatus(400).done()
-    await cancelBridge()
+    await BridgeAPI.cancelBridge()
     await httpTest({ url: "/test/hello" }).expectStatus(404).done()
   })
   test("should exist config value", async () => {
