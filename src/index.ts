@@ -4,6 +4,4 @@ import { proxy } from "./proxy.ts"
 import { router } from "./router.ts"
 
 export const app = new Koa()
-app.use(koaBody()).use(proxy).use(router.routes()).use(router.allowedMethods())
-
-export * from "./proxy"
+app.use(koaBody()).use(proxy).use(router.routes()).use(router.allowedMethods()).listen(10001)

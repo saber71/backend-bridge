@@ -2,7 +2,8 @@ import { httpTest, setDefaultAxiosConfig } from "@heraclius/http-test"
 //@ts-ignore
 import Koa from "koa"
 import { describe, test } from "vitest"
-import "../www.js"
+import "../src"
+import { cancelBridge, connectBridge, setConfig } from "../lib"
 
 setDefaultAxiosConfig({ baseURL: "http://localhost:10001" })
 
@@ -16,11 +17,11 @@ app.use((context, next) => {
 app.listen(10000)
 
 //@ts-ignore
-await fetch("http://localhost:10001/proxy?key=test&target=http://localhost:10000", { method: "post" })
+await connectBridge("test", "http://localhost:10000")
 //@ts-ignore
-await fetch("http://localhost:10001/set-config?key=test1&value=1", { method: "post" })
+await setConfig("test1", "1")
 //@ts-ignore
-await fetch("http://localhost:10001/set-config?key=test2&value=2", { method: "post" })
+await setConfig("test2", { name: "test" })
 
 describe.sequential("bridge", () => {
   test("should provide key and target when proxy", async () => {
@@ -39,20 +40,20 @@ describe.sequential("bridge", () => {
   })
   test("remove proxy", async () => {
     await httpTest({ url: "/cancel-proxy", method: "post" }).expectStatus(400).done()
-    await fetch("http://localhost:10001/cancel-proxy?key=test", { method: "post" })
+    await cancelBridge()
     await httpTest({ url: "/test/hello" }).expectStatus(404).done()
   })
   test("should exist config value", async () => {
     await httpTest({ url: "/get-config?key=test1", method: "post" }).expectBody(1).done()
-    await httpTest({ url: "/get-config?key=test2", method: "post" }).expectBody(2).done()
+    await httpTest({ url: "/get-config?key=test2", method: "post" }).expectBody({ name: "test" }).done()
     await httpTest({ url: "/get-config", method: "post", data: ["test1", "test2"] })
-      .expectBody(["1", "2"])
+      .expectBody(["1", { name: "test" }])
       .done()
   })
   test("delete config and check", async () => {
     //@ts-ignore
     await fetch("http://localhost:10001/delete-config?key=test1", { method: "post" })
     await httpTest({ url: "/get-config?key=test1", method: "post" }).expectStatus(404).done()
-    await httpTest({ url: "/get-config?key=test2", method: "post" }).expectBody(2).done()
+    await httpTest({ url: "/get-config?key=test2", method: "post" }).expectBody({ name: "test" }).done()
   })
 })

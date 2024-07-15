@@ -22,5 +22,7 @@
     "esModuleInterop": true,
     "downlevelIteration": false
   },
-  "include": ["src"]
+  "include": ["src",
+    "lib"
+  ]
 }

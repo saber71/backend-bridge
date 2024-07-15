@@ -3,9 +3,9 @@
   "version": "0.6.1",
   "description": "注册并代理转发后端服务",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/lib.js",
   "scripts": {
-    "build": "vite build",
+    "build": "tsx build.ts",
     "watch": "vite build --watch",
     "test": "vitest run"
   },
@@ -16,12 +16,14 @@
     "@types/koa-router": "^7.4.8",
     "@types/node": "^20.14.10",
     "@types/uuid": "^10.0.0",
+    "axios": "^1.7.2",
     "http-proxy-middleware": "^3.0.0",
     "koa": "^2.15.3",
     "koa-body": "^6.0.1",
     "koa-connect": "^2.1.0",
     "koa-router": "^12.0.1",
     "toad-scheduler": "^3.0.1",
+    "tsx": "^4.16.2",
     "unplugin-swc": "^1.5.1",
     "vite": "^5.3.3",
     "vite-plugin-dts": "^3.9.1",
@@ -31,10 +33,10 @@
     "access": "public"
   },
   "files": [
-    "dist",
-    "www.js"
+    "dist"
   ],
   "peerDependencies": {
+    "axios": "^1.7.2",
     "http-proxy-middleware": "^3.0.0",
     "koa": "^2.15.3",
     "koa-body": "^6.0.1",

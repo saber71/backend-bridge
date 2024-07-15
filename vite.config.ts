@@ -1,15 +1,30 @@
 import { externalDepsPlugin } from "@heraclius/external-deps-plugin"
+import * as path from "node:path"
+import { resolve } from "path"
 import swc from "unplugin-swc"
 import { defineConfig } from "vite"
-import { resolve } from "path"
 import dtsPlugin from "vite-plugin-dts"
 
+const __dirname = path.resolve(".")
+
+export const multiEntry = [
+  {
+    entry: resolve(__dirname, "src/index.ts"),
+    fileName: "www"
+  },
+  {
+    entry: resolve(__dirname, "lib/index.ts"),
+    fileName: "lib"
+  }
+]
+
+export const plugins = () => [dtsPlugin({ rollupTypes: true }), swc.vite(), externalDepsPlugin()]
+
 export default defineConfig({
-  plugins: [dtsPlugin({ rollupTypes: true }), swc.vite(), externalDepsPlugin()],
+  plugins: plugins(),
   build: {
     lib: {
-      entry: resolve(__dirname, "src/index.ts"),
-      fileName: "index",
+      ...multiEntry[0],
       formats: ["es"]
     }
   }

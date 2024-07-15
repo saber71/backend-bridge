@@ -27,9 +27,9 @@ const task = new Task("check and remove proxy", () => {
    */
   const now = Date.now()
   /**
-   * 定义代理的过期时间阈值，这里为1分钟（60000毫秒）。
+   * 定义代理的过期时间阈值，这里为30s。
    */
-  const threshold = 60000
+  const threshold = 30000
   /**
    * 遍历proxyTargetMap，检查每个代理是否过期。
    * 如果代理过期，则从proxyTargetMap和proxyMiddlewareMap中移除该代理。

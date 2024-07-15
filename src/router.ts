@@ -46,6 +46,7 @@ router.post("/cancel-proxy", (context, next) => {
   // 如果键值存在，则尝试移除对应的代理目标
   if (key) {
     removeProxyTarget(key)
+    context.response.body = null
   } else {
     // 缺乏参数，设置响应状态为400，并设置响应体为错误信息
     context.response.status = 400
@@ -68,7 +69,7 @@ router.post("/set-config", (context, next) => {
   // 优先使用查询参数中的值，如果不存在，则使用请求体中的值
   const value = (context.query.value as string) || context.request.body
   // 如果键和值都存在，则更新配置对象
-  if (key && value) {
+  if (key && value !== undefined) {
     config[key] = value
     // 设置响应体为ok，表示操作已完成
     context.response.body = ""
@@ -118,7 +119,7 @@ router.post("/get-config", (context, next) => {
   if (key) {
     // 根据获取的key值从配置对象中获取对应的值。如果key不存在，则使用空字符串作为默认值。
     context.response.body = config[key]
-    if (!context.response.body) context.response.status = 404
+    if (context.response.body === undefined) context.response.status = 404
   } else if (keys) {
     context.response.body = keys.map((key) => config[key] ?? "")
   } else {
