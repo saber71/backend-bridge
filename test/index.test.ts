@@ -23,6 +23,11 @@ await fetch("http://localhost:10001/set-config?key=test1&value=1", { method: "po
 await fetch("http://localhost:10001/set-config?key=test2&value=2", { method: "post" })
 
 describe.sequential("bridge", () => {
+  test("should provide key and target when proxy", async () => {
+    await httpTest({ url: "/proxy?key=12", method: "post" }).expectStatus(400).done()
+    await httpTest({ url: "/proxy?target=12", method: "post" }).expectStatus(400).done()
+    await httpTest({ url: "/proxy", method: "post" }).expectStatus(400).done()
+  })
   test("should proxy correctly", async () => {
     await httpTest({ url: "/test/hello" }).expectStatus(200).expectBody("hello").done()
   })
@@ -33,6 +38,7 @@ describe.sequential("bridge", () => {
     await httpTest({ url: "/test1/hello" }).expectStatus(404).done()
   })
   test("remove proxy", async () => {
+    await httpTest({ url: "/cancel-proxy", method: "post" }).expectStatus(400).done()
     await fetch("http://localhost:10001/cancel-proxy?key=test", { method: "post" })
     await httpTest({ url: "/test/hello" }).expectStatus(404).done()
   })
@@ -46,7 +52,7 @@ describe.sequential("bridge", () => {
   test("delete config and check", async () => {
     //@ts-ignore
     await fetch("http://localhost:10001/delete-config?key=test1", { method: "post" })
-    await httpTest({ url: "/get-config?key=test1", method: "post" }).expectBody("").done()
+    await httpTest({ url: "/get-config?key=test1", method: "post" }).expectStatus(404).done()
     await httpTest({ url: "/get-config?key=test2", method: "post" }).expectBody(2).done()
   })
 })

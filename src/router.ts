@@ -21,10 +21,13 @@ router.post("/proxy", (context, next) => {
   // 检查'target'和'key'是否存在，如果存在，则设置代理目标
   if (target && key) {
     setProxyTarget(key, target)
+    // 设置响应体为'ok'，表示请求已被处理
+    context.response.body = "ok"
+  } else {
+    // 缺乏参数，设置响应状态为400，并设置响应体为错误信息
+    context.response.status = 400
+    context.response.body = "缺乏参数：key和target是必须的"
   }
-
-  // 设置响应体为'ok'，表示请求已被处理
-  context.response.body = "ok"
 
   // 调用下一个中间件或处理程序
   next()
@@ -43,6 +46,10 @@ router.post("/cancel-proxy", (context, next) => {
   // 如果键值存在，则尝试移除对应的代理目标
   if (key) {
     removeProxyTarget(key)
+  } else {
+    // 缺乏参数，设置响应状态为400，并设置响应体为错误信息
+    context.response.status = 400
+    context.response.body = "缺乏参数：key是必须的"
   }
 })
 
@@ -63,9 +70,12 @@ router.post("/set-config", (context, next) => {
   // 如果键和值都存在，则更新配置对象
   if (key && value) {
     config[key] = value
+    // 设置响应体为ok，表示操作已完成
+    context.response.body = ""
+  } else {
+    context.response.status = 400
+    context.response.body = "缺乏参数：key和value是必须的"
   }
-  // 设置响应体为空字符串，表示操作已完成
-  context.response.body = ""
   // 调用next函数，继续处理后续的中间件或路由
   next()
 })
@@ -83,10 +93,12 @@ router.post("/delete-config", (context, next) => {
   // 如果键存在，则从配置对象中删除该配置项
   if (key) {
     delete config[key]
+    // 设置响应体为ok，表示删除成功或操作已完成
+    context.response.body = "ok"
+  } else {
+    context.response.status = 400
+    context.response.body = "缺乏参数：key是必须的"
   }
-
-  // 设置响应体为空字符串，表示删除成功或操作已完成
-  context.response.body = ""
 
   // 继续处理请求的中间件函数链
   next()
@@ -105,11 +117,13 @@ router.post("/get-config", (context, next) => {
 
   if (key) {
     // 根据获取的key值从配置对象中获取对应的值。如果key不存在，则使用空字符串作为默认值。
-    context.response.body = config[key] ?? ""
+    context.response.body = config[key]
+    if (!context.response.body) context.response.status = 404
   } else if (keys) {
     context.response.body = keys.map((key) => config[key] ?? "")
   } else {
-    context.response.body = ""
+    context.response.status = 400
+    context.response.body = "缺乏参数：key是必须的"
   }
 
   // 调用next函数，继续处理请求的中间件链。
