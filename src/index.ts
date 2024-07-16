@@ -1,5 +1,5 @@
 import Koa from "koa"
-import koaBody from "koa-body"
+import { koaBody } from "koa-body"
 import { proxy } from "./proxy.ts"
 import { router } from "./router.ts"
 

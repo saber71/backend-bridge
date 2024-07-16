@@ -1,13 +1,14 @@
 import { httpTest, setDefaultAxiosConfig } from "@heraclius/http-test"
 //@ts-ignore
 import Koa from "koa"
+import { koaBody } from "koa-body"
 import { describe, test } from "vitest"
-import "../src"
+import "../dist/www.js"
 import { BridgeAPI } from "../lib"
 
 setDefaultAxiosConfig({ baseURL: "http://localhost:10001" })
 
-const app = new Koa()
+const app = new Koa().use(koaBody())
 app.use((context, next) => {
   if (context.url === "/hello") {
     context.response.body = "hello"
@@ -30,7 +31,15 @@ describe.sequential("bridge", () => {
     await httpTest({ url: "/proxy", method: "post" }).expectStatus(400).done()
   })
   test("should proxy correctly", async () => {
-    await httpTest({ url: "/test/hello" }).expectStatus(200).expectBody("hello").done()
+    await httpTest({
+      url: "/test/hello",
+      method: "post",
+      data: "hello",
+      headers: { "Content-Type": "text/plain" }
+    })
+      .expectStatus(200)
+      .expectBody("hello")
+      .done()
   })
   test("should proxy result 404", async () => {
     await httpTest({ url: "/test/hello/123" }).expectStatus(404).done()
