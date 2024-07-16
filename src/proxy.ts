@@ -58,6 +58,6 @@ export const proxy: Koa.Middleware = async (context: Koa.Context, next: Koa.Next
     await middleware(context, next)
   } else {
     // 如果没有找到代理中间件，则继续处理下一个中间件。
-    next()
+    await next()
   }
 }

@@ -3,7 +3,7 @@ import { httpTest, setDefaultAxiosConfig } from "@heraclius/http-test"
 import Koa from "koa"
 import { koaBody } from "koa-body"
 import { describe, test } from "vitest"
-import "../dist/www.js"
+import "../src"
 import { BridgeAPI } from "../lib"
 
 setDefaultAxiosConfig({ baseURL: "http://localhost:10001" })
