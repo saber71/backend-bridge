@@ -1,7 +1,6 @@
 import { createProxyMiddleware } from "http-proxy-middleware"
 import type Koa from "koa"
 import koaConnect from "koa-connect"
-import { SimpleIntervalJob, Task, ToadScheduler } from "toad-scheduler"
 
 /**
  * 用于存储每个代理中间件的映射表。
@@ -11,41 +10,6 @@ const proxyMiddlewareMap: Record<string, Koa.Middleware | undefined> = {}
  * 用于存储每个代理关键字和代理目标、时间戳的映射表。
  */
 const proxyTargetMap: Record<string, { timestamp: number; target: string } | undefined> = {}
-
-/**
- * 初始化一个调度器，用于定期执行任务。
- */
-const schedule = new ToadScheduler()
-
-/**
- * 创建一个任务，用于检查并移除过期的代理。
- * 任务名称为"check and remove proxy"，任务内容是遍历proxyTargetMap，移除过期的代理。
- */
-const task = new Task("check and remove proxy", () => {
-  /**
-   * 获取当前时间戳，用于与代理的最后使用时间进行比较。
-   */
-  const now = Date.now()
-  /**
-   * 定义代理的过期时间阈值，这里为30s。
-   */
-  const threshold = 30000
-  /**
-   * 遍历proxyTargetMap，检查每个代理是否过期。
-   * 如果代理过期，则从proxyTargetMap和proxyMiddlewareMap中移除该代理。
-   */
-  for (let [key, value] of Object.entries(proxyTargetMap)) {
-    if (now - value!.timestamp > threshold) {
-      removeProxyTarget(key)
-    }
-  }
-})
-
-/**
- * 将任务添加到调度器中，以每秒一次的间隔执行。
- * 这样任务就会定期检查并移除过期的代理。
- */
-schedule.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 1 }, task))
 
 // 删除对应key的代理
 export function removeProxyTarget(key: string) {

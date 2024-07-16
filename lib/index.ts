@@ -2,10 +2,7 @@ import axios from "axios"
 import { AsyncTask, SimpleIntervalJob, ToadScheduler } from "toad-scheduler"
 
 export namespace BridgeAPI {
-  const SCHEDULE_PROXY = "proxy"
   const SCHEDULE_CONFIG = "config"
-
-  let proxyKey = ""
 
   export let axiosInstance = axios.create({
     baseURL: "http://localhost:10001"
@@ -22,37 +19,15 @@ export namespace BridgeAPI {
    * 连接桥接服务。
    * @param key - 桥接服务的密钥。
    * @param proxyTarget - 需要被代理的目标地址。
-   * @param url - 桥接服务的地址，默认为本地服务。
    * @remarks
-   * 该函数创建一个任务，定期向桥接服务发送请求，以保持连接。
    */
-  export function connectBridge(key: string, proxyTarget: string, url = axiosInstance.defaults.baseURL) {
-    proxyKey = key
-    const request = () =>
-      axiosInstance({
-        baseURL: url,
-        url: "/proxy",
-        params: { key, target: proxyTarget },
-        method: "post"
-      }).catch((err) => console.log(err.response.data))
-
-    const existJob = scheduler.existsById(SCHEDULE_PROXY)
-    if (url !== axiosInstance.defaults.baseURL || !existJob) {
-      axiosInstance.defaults.baseURL = url
-      if (existJob) scheduler.removeById(SCHEDULE_PROXY)
-      /**
-       * 创建一个异步任务，用于向服务器发送代理请求。
-       */
-      const task = new AsyncTask(SCHEDULE_PROXY, request)
-      /**
-       * 将任务添加到调度器中，以每15秒的间隔执行。
-       */
-      scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 15 }, task, { id: SCHEDULE_PROXY }))
-    } else {
-      scheduler.startById(SCHEDULE_PROXY)
-    }
-
-    return request()
+  export function connect(key: string, proxyTarget: string) {
+    cancelOnExit(key)
+    return axiosInstance({
+      url: "/proxy",
+      params: { key, target: proxyTarget },
+      method: "post"
+    })
   }
 
   /**
@@ -60,9 +35,8 @@ export namespace BridgeAPI {
    * @remarks
    * 该函数停止调度器，取消定期任务。
    */
-  export function cancelBridge() {
-    if (scheduler.existsById(SCHEDULE_PROXY)) scheduler.stopById(SCHEDULE_PROXY)
-    return axiosInstance({ url: "/cancel-proxy?key=" + proxyKey, method: "post" })
+  export function cancel(key: string) {
+    return axiosInstance({ url: "/cancel-proxy?key=" + key, method: "post" })
   }
 
   const configCache: Record<string, any> = {}
@@ -180,5 +154,27 @@ export namespace BridgeAPI {
 
     // 将异步任务添加到调度器中，以每30秒的间隔执行。
     scheduler.addSimpleIntervalJob(new SimpleIntervalJob({ seconds: 30 }, task, { id: SCHEDULE_CONFIG }))
+  }
+
+  /**
+   * 在进程退出或收到SIGINT信号时取消桥接函数。
+   *
+   * 此函数旨在确保在Node.js进程意外退出或用户发送SIGINT信号（例如，通过Ctrl+C）时，
+   * 可以取消特定的桥接操作。通过在进程的"exit"和"SIGINT"事件上注册一个回调函数，
+   * 它可以在进程终止之前执行必要的清理工作。
+   *
+   * @param key 用于标识要取消的桥接操作的唯一键。这个键用于调用cancelBridge函数来取消操作。
+   */
+  function cancelOnExit(key: string) {
+    // 注册一个退出事件的监听器，以便在进程退出时执行清理操作。
+    process.on("exit", fn)
+    // 注册一个SIGINT事件的监听器，以便在收到SIGINT信号时执行清理操作。
+    process.on("SIGINT", fn)
+
+    // 定义一个异步函数作为事件监听器的回调函数。
+    async function fn() {
+      // 调用cancelBridge函数来取消指定的桥接操作。
+      return await cancel(key)
+    }
   }
 }

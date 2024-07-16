@@ -17,7 +17,7 @@ app.use((context, next) => {
 app.listen(10000)
 
 //@ts-ignore
-await BridgeAPI.connectBridge("test", "http://localhost:10000")
+await BridgeAPI.connect("test", "http://localhost:10000")
 //@ts-ignore
 await BridgeAPI.setConfig("test1", "1")
 //@ts-ignore
@@ -40,7 +40,7 @@ describe.sequential("bridge", () => {
   })
   test("remove proxy", async () => {
     await httpTest({ url: "/cancel-proxy", method: "post" }).expectStatus(400).done()
-    await BridgeAPI.cancelBridge()
+    await BridgeAPI.cancel("test")
     await httpTest({ url: "/test/hello" }).expectStatus(404).done()
   })
   test("should exist config value", async () => {
