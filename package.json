@@ -1,6 +1,6 @@
 {
   "name": "@heraclius/backend-bridge",
-  "version": "0.7.2",
+  "version": "1.0.0",
   "description": "注册并代理转发后端服务",
   "type": "module",
   "main": "dist/lib.js",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@heraclius/external-deps-plugin": "^0.1.1",
+    "@heraclius/external-deps-plugin": "^1.0.0",
     "@heraclius/http-test": "^0.2.0",
     "@types/koa": "^2.15.0",
     "@types/koa-router": "^7.4.8",
