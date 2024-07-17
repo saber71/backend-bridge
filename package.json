@@ -14,7 +14,7 @@
     "@heraclius/http-test": "^0.2.0",
     "@types/koa": "^2.15.0",
     "@types/koa-router": "^7.4.8",
-    "@types/node": "^20.14.10",
+    "@types/node": "^20.14.11",
     "@types/uuid": "^10.0.0",
     "axios": "^1.7.2",
     "http-proxy-middleware": "^3.0.0",
@@ -25,9 +25,9 @@
     "toad-scheduler": "^3.0.1",
     "tsx": "^4.16.2",
     "unplugin-swc": "^1.5.1",
-    "vite": "^5.3.3",
+    "vite": "^5.3.4",
     "vite-plugin-dts": "^3.9.1",
-    "vitest": "^2.0.2"
+    "vitest": "^2.0.3"
   },
   "publishConfig": {
     "access": "public"
