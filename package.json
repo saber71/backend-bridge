@@ -1,6 +1,6 @@
 {
   "name": "@heraclius/backend-bridge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "注册并代理转发后端服务",
   "type": "module",
   "main": "dist/lib.js",
