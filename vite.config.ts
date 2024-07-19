@@ -26,6 +26,7 @@ export default defineConfig({
     lib: {
       ...multiEntry[0],
       formats: ["es"]
-    }
+    },
+    outDir: "dist_node"
   }
 })

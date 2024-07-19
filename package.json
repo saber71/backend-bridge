@@ -3,12 +3,13 @@
   "version": "1.1.0",
   "description": "注册并代理转发后端服务",
   "type": "module",
-  "main": "dist/lib.js",
+  "main": "dist_node/lib.js",
   "scripts": {
-    "build": "tsx build.ts",
+    "build": "tsx build.ts && rimraf dist && pipenv run python setup.py sdist bdist_wheel",
     "watch": "vite build --watch",
     "test": "vitest run",
-    "start": "node dist/www.js"
+    "start": "node dist_node/www.js",
+    "upload": "twine upload dist/*"
   },
   "devDependencies": {
     "@heraclius/external-deps-plugin": "^1.1.0",
