@@ -1,6 +1,6 @@
 {
   "name": "@heraclius/backend-bridge",
-  "version": "1.1.0",
+  "version": "1.4.0",
   "description": "注册并代理转发后端服务",
   "type": "module",
   "main": "dist_node/lib.js",
@@ -9,7 +9,8 @@
     "watch": "vite build --watch",
     "test": "vitest run",
     "start": "node dist_node/www.js",
-    "upload": "twine upload dist/*"
+    "upload-python": "twine upload dist/*",
+    "upload": "pnpm publish && pnpm run upload-python"
   },
   "devDependencies": {
     "@heraclius/external-deps-plugin": "^1.1.0",
